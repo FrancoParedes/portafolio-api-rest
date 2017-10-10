@@ -20,6 +20,18 @@ import javax.ws.rs.PathParam;
  */
 @Path("/cuentas")
 public class CuentaService {
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public VOCuenta getCuentas(){
+        VOCuenta cuentax = new VOCuenta();
+        cuentax.setNombre("franco444");
+        cuentax.setApellido("paredes");
+        
+        return cuentax;
+    }
+    
+    
     @POST
     @Path("/franco")
     @Consumes({MediaType.APPLICATION_JSON})

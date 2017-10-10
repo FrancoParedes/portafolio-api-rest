@@ -5,6 +5,10 @@
  */
 package com.portafolio.api.vo;
 
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author FRANCO
@@ -28,7 +32,16 @@ public class VOCuenta {
         this.apellido = apellido;
     }
     
-    
+    static List<VOCuenta> all(){
+        List<VOCuenta> list = new ArrayList<>();
+        
+        String sql = "SELECT * FROM cuenta";
+        
+        Conexion coo = new Conexion();
+        Connection cnx = coo.getConexion();
+        
+        return list;
+    }
     
     
 }

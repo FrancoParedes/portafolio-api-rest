@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.portafolio.api.vo.VOCuenta;
+import java.util.List;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 
@@ -23,12 +24,9 @@ public class CuentaService {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public VOCuenta getCuentas(){
-        VOCuenta cuentax = new VOCuenta();
-        cuentax.setNombre("franco444");
-        cuentax.setApellido("paredes");
+    public List<VOCuenta> getCuentas(){
         
-        return cuentax;
+        return VOCuenta.all();
     }
     
     

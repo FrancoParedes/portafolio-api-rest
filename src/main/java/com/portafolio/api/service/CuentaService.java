@@ -37,7 +37,6 @@ public class CuentaService {
     public VOCuenta getCuenta(){
         VOCuenta cuentax = new VOCuenta();
         cuentax.setNombre("franco");
-        cuentax.setApellido("paredes");
         
         return cuentax;
     }

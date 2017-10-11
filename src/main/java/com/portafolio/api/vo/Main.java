@@ -5,6 +5,7 @@
  */
 package com.portafolio.api.vo;
 
+
 /**
  *
  * @author FRANCO

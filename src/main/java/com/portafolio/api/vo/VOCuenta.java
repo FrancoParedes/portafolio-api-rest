@@ -5,6 +5,7 @@
  */
 package com.portafolio.api.vo;
 
+import com.portafolio.api.utils.Random;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,9 +21,26 @@ import java.util.logging.Logger;
  * @author FRANCO
  */
 public class VOCuenta {
-    private String id, rut,nombre, apellidoP, apellidoM, email, telefono, celular, password;
+    private String cuenta_id, rut,nombre, apellido_p, apellido_m, email, telefono, celular, password;
     char sexo;
+    int rol_id;
 
+    public VOCuenta() {
+    }
+
+    public VOCuenta(String rut, String nombre, String apellido_p, String apellido_m, String email, String telefono, String celular, String password, char sexo, int rol_id) throws Exception{
+        setId("");
+        setRut(rut);
+        setNombre(nombre);
+        setApellido_p(apellido_p);
+        setApellido_m(apellido_m);
+        setEmail(email);
+        setTelefono(telefono);
+        setCelular(celular);
+        setPassword(password);
+        setSexo(sexo);
+        setRol_id(rol_id);
+    }    
     public String getNombre() {
         return nombre;
     }
@@ -31,12 +49,16 @@ public class VOCuenta {
         this.nombre = nombre;
     }
 
-    public String getId() {
-        return id;
+    public String getCuenta_id() {
+        return cuenta_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String cuenta_id) {
+        if (cuenta_id.trim().length()==0) {
+            this.cuenta_id = Random.alfanumeric(10);
+        }else {
+            this.cuenta_id = cuenta_id;
+        }
     }
 
     public String getRut() {
@@ -47,21 +69,23 @@ public class VOCuenta {
         this.rut = rut;
     }
 
-    public String getApellidoP() {
-        return apellidoP;
+    public String getApellido_p() {
+        return apellido_p;
     }
 
-    public void setApellidoP(String apellidoP) {
-        this.apellidoP = apellidoP;
+    public void setApellido_p(String apellido_p) {
+        this.apellido_p = apellido_p;
     }
 
-    public String getApellidoM() {
-        return apellidoM;
+    public String getApellido_m() {
+        return apellido_m;
     }
 
-    public void setApellidoM(String apellidoM) {
-        this.apellidoM = apellidoM;
+    public void setApellido_m(String apellido_m) {
+        this.apellido_m = apellido_m;
     }
+
+    
 
     public char getSexo() {
         return sexo;
@@ -76,7 +100,10 @@ public class VOCuenta {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email) throws Exception {
+        if(email.trim().length()==0){
+            throw new Exception("Ingresa un correo electronico");
+        }
         this.email = email;
     }
 
@@ -104,39 +131,78 @@ public class VOCuenta {
         this.password = password;
     }
 
+    public int getRol_id() {
+        return rol_id;
+    }
+
+    public void setRol_id(int rol_id) {
+        this.rol_id = rol_id;
+    }
+
     
     
-    public static List<VOCuenta> all(){
+    public static List<VOCuenta> all() throws Exception, SQLException{
         List<VOCuenta> list = new ArrayList<>();
         
         String sql = "SELECT * FROM cuenta";
-        
+       
         Connection cnx = new Conexion().getConexion();
         
-        try {
             PreparedStatement stmt = cnx.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            
             while(rs.next()){
+                System.out.println("Fila encontrada");
                 VOCuenta cuenta = new VOCuenta();
-                cuenta.setId(rs.getString("cuenta_id"));
-                cuenta.setRut(rs.getString("rut"));
-                cuenta.setNombre(rs.getString("nombre"));
-                cuenta.setApellidoP(rs.getString("apellido_p"));
-                cuenta.setApellidoM(rs.getString("apellido_m"));
-                cuenta.setSexo(rs.getString("sexo").charAt(0));
-                cuenta.setEmail(rs.getString("email"));
-                cuenta.setTelefono(rs.getString("telefono"));
-                cuenta.setCelular(rs.getString("celular"));
-                cuenta.setPassword(rs.getString("password"));
-                
+                cuenta.cuenta_id = rs.getString("cuenta_id");
+                cuenta.rut = rs.getString("rut");
+                cuenta.nombre = rs.getString("nombre");
+                cuenta.apellido_p = rs.getString("apellido_p");
+                cuenta.apellido_m = rs.getString("apellido_m");
+                cuenta.sexo = rs.getString("sexo").charAt(0);
+                cuenta.email = rs.getString("email");
+                cuenta.telefono = rs.getString("telefono");
+                cuenta.celular = rs.getString("celular");
+                cuenta.rol_id = rs.getInt("rol_id");
                 list.add(cuenta);
+                
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(VOCuenta.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            if(list.isEmpty()){
+                throw new Exception("No se encontraron cuentas registradas");
+            }
         return list;
     }
     
-    
+    public int save() throws Exception, SQLException{
+        int resultado = 0;
+        
+        String sql = "INSERT INTO cuenta(cuenta_id, rut, nombre, apellido_p, apellido_m, sexo, email, telefono, celular, password, rol_id) ";
+        sql+= "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        
+        PreparedStatement stmt = null;
+        Connection cnx = new Conexion().getConexion();
+        
+        stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, this.cuenta_id);
+        stmt.setString(2, this.rut);
+        stmt.setString(3, this.nombre);
+        stmt.setString(4, this.apellido_p);
+        stmt.setString(5, this.apellido_m);
+        stmt.setString(6, String.valueOf(this.sexo));
+        stmt.setString(7, this.email);
+        stmt.setString(8, this.telefono);
+        stmt.setString(9, this.celular);
+        stmt.setString(10, this.password);
+        stmt.setInt(11, this.rol_id);
+
+        resultado = stmt.executeUpdate();
+
+        stmt.close();
+        
+        if(resultado==0){
+            throw new Exception("No se ha registrado la cuenta");
+        }
+        
+        
+        return resultado;
+    }
 }

@@ -35,19 +35,17 @@ public class CuentaService {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public RespuestaServidor getCuentas(){
-        RespuestaServidor rs = new RespuestaServidor();
+    public Response getCuentas(){
+        Response res;
         try {
-            rs.setBody(VOCuenta.all());
-            rs.setStatus("OK");
-            rs.setCode(200);
+            res = Response.ok().entity(VOCuenta.all()).build();
         }catch (Exception e) {
-            rs.setStatus("FAIL");
-            rs.setCode(404);
-            rs.setMessage(e.getMessage());
+            Map msj = new HashMap();
+            msj.put("message", e.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
         }
                 
-        return rs;
+        return res;
     }
     
     @POST

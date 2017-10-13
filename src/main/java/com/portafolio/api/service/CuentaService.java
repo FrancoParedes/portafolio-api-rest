@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -48,6 +50,77 @@ public class CuentaService {
         return res;
     }
     
+    @GET
+    @Path("{cuenta_id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response find(@PathParam("cuenta_id") String cuenta_id){
+        Response res;
+        try {
+            res = Response.ok().entity(VOCuenta.find(cuenta_id)).build();
+        } catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+        
+        return res;
+    }
+    @PUT
+    @Path("{cuenta_id}")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response update(
+            @PathParam("cuenta_id") String cuenta_id,
+            @FormParam("nombre") String nombre,
+            @FormParam("apellido_p") String apellido_p,
+            @FormParam("apellido_m") String apellido_m,
+            @FormParam("sexo") String sexo,
+            @FormParam("email") String email,
+            @FormParam("telefono") String telefono,
+            @FormParam("celular") String celular,
+            @FormParam("rol_id") int rol_id)
+          {
+        Response res;
+        
+        
+        try {
+            VOCuenta cuenta = new VOCuenta();
+            cuenta.setId(cuenta_id);
+            cuenta.setNombre(nombre);
+            cuenta.setApellido_p(apellido_p);
+            cuenta.setApellido_m(apellido_m);
+            cuenta.setSexo(sexo.charAt(0));
+            cuenta.setEmail(email);
+            cuenta.setTelefono(telefono);
+            cuenta.setCelular(celular);
+            cuenta.setRol_id(rol_id);
+            
+            res = Response.ok().entity(cuenta.update()).build();
+            
+        } catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.toString());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+        
+        return res;
+    }
+    
+    @DELETE
+    @Path("{cuenta_id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response delete(@PathParam("cuenta_id") String cuenta_id){
+        Response res;
+        try {
+            res = Response.ok().entity(VOCuenta.delete(cuenta_id)).build();
+        } catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+        return res;
+    }
+    
     @POST
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
@@ -66,7 +139,7 @@ public class CuentaService {
         Response res;
         try {
             VOCuenta cuentax = new VOCuenta(rut, nombre, apellido_p, apellido_m,
-                    "sdfsdf", telefono, celular, password, 'M', rol_id);
+                    email, telefono, celular, password, sexo.charAt(0), rol_id);
             cuentax.save();
             res = Response.ok().entity(cuentax).build();
         } catch (Exception ex) {
@@ -77,4 +150,8 @@ public class CuentaService {
         
         return res;
     }
+    
+    
+    
+    
 }

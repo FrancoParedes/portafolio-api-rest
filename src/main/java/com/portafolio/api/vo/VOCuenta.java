@@ -12,7 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +43,12 @@ public class VOCuenta {
         setPassword(password);
         setSexo(sexo);
         setRol_id(rol_id);
-    }    
+    } 
+    
+    public VOCuenta(String email, String password) throws Exception{
+        setEmail(email);
+        setPassword(password);
+    }
     public String getNombre() {
         return nombre;
     }
@@ -127,7 +135,10 @@ public class VOCuenta {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password) throws Exception {
+        if(password.trim().length()==0){
+            throw new Exception("Ingresa una contraseña");
+        }
         this.password = password;
     }
 
@@ -172,6 +183,85 @@ public class VOCuenta {
         return list;
     }
     
+    
+    public static VOCuenta find(String cuenta_id) throws Exception, SQLException{
+        VOCuenta cuenta = null;
+        String sql = "SELECT * FROM cuenta WHERE cuenta_id=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, cuenta_id);
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()){
+            
+            cuenta = new VOCuenta();
+            
+            cuenta.cuenta_id = rs.getString("cuenta_id");
+            cuenta.rut = rs.getString("rut");
+            cuenta.nombre = rs.getString("nombre");
+            cuenta.apellido_p = rs.getString("apellido_p");
+            cuenta.apellido_m = rs.getString("apellido_m");
+            cuenta.sexo = rs.getString("sexo").charAt(0);
+            cuenta.email = rs.getString("email");
+            cuenta.telefono = rs.getString("telefono");
+            cuenta.celular = rs.getString("celular");
+            cuenta.rol_id = rs.getInt("rol_id");
+
+        }
+        if(cuenta==null){
+            throw new Exception("No existe el numero de cuenta");
+        }
+        return cuenta;
+    }
+    public boolean update() throws Exception, SQLException{
+        String sql = "UPDATE cuenta SET nombre=?, apellido_p=?, apellido_m=?, sexo=?, email=?, ";
+        sql+= "telefono=?, celular=?, rol_id=? WHERE cuenta_id=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, this.nombre);
+        stmt.setString(2, this.apellido_p);
+        stmt.setString(3, this.apellido_m);
+        stmt.setString(4, String.valueOf(this.sexo));
+        stmt.setString(5, this.email);
+        stmt.setString(6, this.telefono);
+        stmt.setString(7, this.celular);
+        stmt.setInt(8, this.rol_id);
+        stmt.setString(9, this.cuenta_id);
+        
+        System.out.println("ID CUENTA: " + this.cuenta_id);
+        
+        int resultado = stmt.executeUpdate();
+        System.out.println("Resultado de la actualizacion:" + resultado);
+        if(resultado==1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    
+    public static boolean delete(String cuenta_id) throws Exception, SQLException{
+        String sql = "DELETE FROM cuenta WHERE cuenta_id=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        
+        stmt.setString(1, cuenta_id);
+        
+        
+        int resultado = stmt.executeUpdate();
+        System.out.println("Resultado de la eliminacion:" + resultado);
+        if(resultado==1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    
+    
     public int save() throws Exception, SQLException{
         int resultado = 0;
         
@@ -204,5 +294,34 @@ public class VOCuenta {
         
         
         return resultado;
+    }
+    
+    public Map<String, String> iniciar() throws SQLException, Exception{
+        Map<String, String> cuenta = null;
+        String sql = "SELECT * FROM cuenta WHERE email=? AND password=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, this.email);
+        stmt.setString(2, this.password);
+        
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()){
+            cuenta = new LinkedHashMap();
+            cuenta.put("cuenta_id", rs.getString("cuenta_id"));
+            cuenta.put("rut", rs.getString("rut"));
+            cuenta.put("nombre", rs.getString("nombre"));
+            cuenta.put("apellido_p", rs.getString("apellido_p"));
+            cuenta.put("apellido_m", rs.getString("apellido_m"));
+            cuenta.put("email", rs.getString("email"));
+            cuenta.put("rol_id", rs.getString("rol_id"));
+            
+
+        }
+        if(cuenta==null){
+            throw new Exception("El correo electronico y/o la contraseña no coinciden");
+        }
+        return cuenta;
     }
 }

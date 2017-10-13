@@ -1,6 +1,8 @@
+com\portafolio\api\service\ActividadService.class
 com\portafolio\api\vo\Conexion.class
 com\portafolio\api\vo\VOCuenta.class
+com\portafolio\api\service\UsuarioService.class
 com\portafolio\api\service\CuentaService.class
 com\portafolio\api\utils\Random.class
-com\portafolio\api\utils\RespuestaServidor.class
+com\portafolio\api\vo\VOActividad.class
 com\portafolio\api\vo\Main.class

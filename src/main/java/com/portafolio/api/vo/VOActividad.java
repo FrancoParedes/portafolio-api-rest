@@ -54,6 +54,22 @@ public class VOActividad {
         }
     }
     
+    public static boolean check(String actividad_id) throws Exception, SQLException{
+        String sql = "SELECT actividad_id FROM actividad WHERE actividad_id=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, actividad_id);
+        ResultSet rs = stmt.executeQuery();
+        
+        
+        if(rs.next()){
+            return true;
+        }else {
+            return false;
+        }
+    }
     
     public static List<VOActividad> all() throws Exception, SQLException{
         List<VOActividad> list = new ArrayList<>();
@@ -97,7 +113,7 @@ public class VOActividad {
 
         }
         if(actividad==null){
-            throw new Exception("No existe el numero de cuenta");
+            throw new Exception("No existe la actividad");
         }
         return actividad;
     }    

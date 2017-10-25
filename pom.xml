@@ -36,6 +36,16 @@
             <artifactId>jersey-servlet</artifactId>
             <version>1.19</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-multipart</artifactId>
+            <version>1.19</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet</groupId>
+            <artifactId>mimepull</artifactId>
+            <version>1.6</version>
+        </dependency>
          <!-- ojdbc7.jar example -->
         <dependency>
             <groupId>com.github.noraui</groupId>

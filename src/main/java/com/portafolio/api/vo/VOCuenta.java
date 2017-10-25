@@ -150,7 +150,22 @@ public class VOCuenta {
         this.rol_id = rol_id;
     }
 
-    
+    public static boolean check(String cuenta_id) throws Exception, SQLException{
+        String sql = "SELECT cuenta_id FROM cuenta WHERE cuenta_id=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, cuenta_id);
+        ResultSet rs = stmt.executeQuery();
+        
+        
+        if(rs.next()){
+            return true;
+        }else {
+            return false;
+        }
+    }
     
     public static List<VOCuenta> all() throws Exception, SQLException{
         List<VOCuenta> list = new ArrayList<>();
@@ -324,4 +339,24 @@ public class VOCuenta {
         }
         return cuenta;
     }
+    
+    public static String getRolCuenta(String cuenta_id) throws Exception, SQLException{
+        String rol_id = "";
+        
+        String sql = "SELECT rol_id FROM cuenta WHERE cuenta_id=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, cuenta_id);
+        ResultSet rs = stmt.executeQuery();
+        
+        
+        if(rs.next()){
+            rol_id = rs.getString("rol_id");
+        }
+        
+        return rol_id;
+    }
+    
 }

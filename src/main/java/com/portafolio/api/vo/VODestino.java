@@ -54,6 +54,21 @@ public class VODestino {
         }
     }
     
+    public static boolean check(String destino_id) throws Exception, SQLException {
+        String sql = "SELECT destino_id FROM destino WHERE destino_id=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, destino_id);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     public static List<VODestino> all() throws Exception, SQLException{
         List<VODestino> list = new ArrayList<>();

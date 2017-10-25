@@ -36,6 +36,7 @@ public class Conexion {
             
             con = DriverManager.getConnection(ulrjdbc);
         } catch (Exception e) {
+            System.out.println(e.toString());
         }
         System.out.println(con);
         return con;

@@ -20,6 +20,7 @@ import java.util.Map;
  * @author FRANCO
  */
 public class VOAlumno {
+
     private String id, nombre, apellido, sexo, curso_id, cuenta_id;
 
     public VOAlumno() {
@@ -33,7 +34,7 @@ public class VOAlumno {
         setCurso_id(curso_id);
         setCuenta_id(cuenta_id);
     }
-    
+
     public String getId() {
         return id;
     }
@@ -47,10 +48,10 @@ public class VOAlumno {
     }
 
     public void setNombre(String nombre) throws Exception {
-        if(nombre.trim().length()==0){
+        if (nombre.trim().length() == 0) {
             throw new Exception("Ingresa el nombre del alumno");
         }
-        if(nombre.trim().length()>15){
+        if (nombre.trim().length() > 15) {
             throw new Exception("Demasiados caracteres para el nombre (15max)");
         }
         this.nombre = nombre.toUpperCase();
@@ -61,13 +62,13 @@ public class VOAlumno {
     }
 
     public void setApellido(String apellido) throws Exception {
-        if(apellido.trim().length()==0){
+        if (apellido.trim().length() == 0) {
             throw new Exception("Ingresa el apellido del alumno");
         }
-        if(apellido.trim().length()>15){
+        if (apellido.trim().length() > 15) {
             throw new Exception("Demasiados caracteres para el apellido (15max)");
         }
-        
+
         this.apellido = apellido.toUpperCase();
     }
 
@@ -76,9 +77,9 @@ public class VOAlumno {
     }
 
     public void setSexo(String sexo) throws Exception {
-        if(sexo.toUpperCase().equals("M") || sexo.toUpperCase().equals("F")){
+        if (sexo.toUpperCase().equals("M") || sexo.toUpperCase().equals("F")) {
             this.sexo = sexo.toUpperCase();
-        }else {
+        } else {
             throw new Exception("Selecciona correctamente el sexo");
         }
     }
@@ -88,10 +89,10 @@ public class VOAlumno {
     }
 
     public void setCurso_id(String curso_id) throws Exception {
-        if(curso_id.trim().length()==0){
+        if (curso_id.trim().length() == 0) {
             throw new Exception("Ingresa el curso del alumno");
         }
-        if(!VOCurso.check(curso_id)){
+        if (!VOCurso.check(curso_id)) {
             throw new Exception("El curso seleccionado no existe");
         }
         this.curso_id = curso_id;
@@ -102,50 +103,67 @@ public class VOAlumno {
     }
 
     public void setCuenta_id(String cuenta_id) throws Exception {
-        if(cuenta_id.trim().length()==0){
+        if (cuenta_id.trim().length() == 0) {
             throw new Exception("Ingresas la cuenta del apoderado");
         }
-        if(!VOCuenta.check(cuenta_id)){
+        if (!VOCuenta.check(cuenta_id)) {
             throw new Exception("La cuenta del apoderado no existe");
         }
-        
+
         this.cuenta_id = cuenta_id;
     }
-    
-    public static boolean check(String alumno_id) throws Exception, SQLException{
+
+    public static boolean check(String alumno_id) throws Exception, SQLException {
         String sql = "SELECT alumno_id FROM alumno WHERE alumno_id=?";
-       
+
         Connection cnx = new Conexion().getConexion();
-        
+
         PreparedStatement stmt = cnx.prepareStatement(sql);
         stmt.setString(1, alumno_id);
         ResultSet rs = stmt.executeQuery();
-        
-        
-        if(rs.next()){
+
+        if (rs.next()) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
-     public static boolean checkApoderado(String alumno_id, String cuenta_id) throws Exception, SQLException{
+
+    public static boolean checkApoderado(String alumno_id, String cuenta_id) throws Exception, SQLException {
         String sql = "SELECT alumno_id FROM alumno WHERE alumno_id=? AND cuenta_id=?";
-       
+
         Connection cnx = new Conexion().getConexion();
-        
+
         PreparedStatement stmt = cnx.prepareStatement(sql);
         stmt.setString(1, alumno_id);
         stmt.setString(2, cuenta_id);
         ResultSet rs = stmt.executeQuery();
-        
-        
-        if(rs.next()){
+
+        if (rs.next()) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
-   
+
+    public static boolean delete(String alumno_id) throws Exception, SQLException {
+        String sql = "DELETE FROM alumno WHERE alumno_id=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+
+        stmt.setString(1, alumno_id);
+
+        int resultado = stmt.executeUpdate();
+        System.out.println("Resultado de la eliminacion:" + resultado);
+        if (resultado == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public int save() throws Exception, SQLException {
         int resultado = 0;
 
@@ -173,55 +191,64 @@ public class VOAlumno {
 
         return resultado;
     }
-    
-    public static List<Map> listByCourses(String curso_id) throws Exception, SQLException{
+
+    public static List<Map> listByCourses(String curso_id) throws Exception, SQLException {
         List<Map> list = new ArrayList<>();
-        
-        String sql = "SELECT * FROM alumno WHERE curso_id=?";
-       
+
+        StringBuilder sql = new StringBuilder();
+
+        sql.append("SELECT  alu.alumno_id, alu.nombre, alu.apellido, alu.cuenta_id, sum(s.precio) as meta,");
+        sql.append("(SELECT sum(monto) FROM deposito d ");
+        sql.append("INNER JOIN deposito_alumno da ON d.deposito_id=da.deposito_id WHERE da.alumno_id=alu.alumno_id) AS actual, ");
+        sql.append("(SELECT sum(prorrateo) FROM deposito_curso where curso_id=alu.curso_id) AS prorrateo ");
+        sql.append("FROM alumno alu ");
+        sql.append("INNER JOIN curso_servicio cs on alu.curso_id=cs.curso_id ");
+        sql.append("INNER JOIN servicio s on cs.servicio_id=s.servicio_id ");
+        sql.append("WHERE alu.curso_id=? ");
+        sql.append("GROUP BY alu.alumno_id,alu.nombre, alu.apellido,alu.cuenta_id, alu.curso_id ");
+        sql.append("ORDER BY alu.apellido");
         Connection cnx = new Conexion().getConexion();
-        
-            PreparedStatement stmt = cnx.prepareStatement(sql);
-            stmt.setString(1, curso_id);
-            ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
-                System.out.println("Fila encontrada");
-                Map alumno = new LinkedHashMap();
-                alumno.put("id", rs.getString("alumno_id"));
-                alumno.put("nombre", rs.getString("nombre"));
-                alumno.put("apellido", rs.getString("apellido"));
-                alumno.put("cuenta_id", rs.getString("cuenta_id"));
-                list.add(alumno);
-                
-            }
-            
+
+        PreparedStatement stmt = cnx.prepareStatement(sql.toString());
+        stmt.setString(1, curso_id);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            System.out.println("Fila encontrada");
+            Map alumno = new LinkedHashMap();
+            alumno.put("id", rs.getString("alumno_id"));
+            alumno.put("nombre", rs.getString("nombre"));
+            alumno.put("apellido", rs.getString("apellido"));
+            alumno.put("cuenta_id", rs.getString("cuenta_id"));
+            alumno.put("meta", rs.getString("meta"));
+            alumno.put("actual", rs.getInt("actual") + rs.getInt("prorrateo"));
+            list.add(alumno);
+
+        }
+
         return list;
     }
-    public static int contarAlumnosPorCurso(String curso_id) throws Exception, SQLException{
+
+    public static int contarAlumnosPorCurso(String curso_id) throws Exception, SQLException {
         String sql = "SELECT count(alumno_id) as count FROM alumno WHERE curso_id=?";
-       
+
         Connection cnx = new Conexion().getConexion();
 
         PreparedStatement stmt = cnx.prepareStatement(sql);
         stmt.setString(1, curso_id);
         ResultSet rs = stmt.executeQuery();
-        
+
         int num = 0;
-        while(rs.next()){
+        while (rs.next()) {
             num = rs.getInt("count");
         }
-            
+
         return num;
     }
-    
-    public static List<Map> getAlumnosApoderado(String cuenta_id) throws SQLException, Exception{
-        if(!VOCuenta.check(cuenta_id)){
+
+    public static List<Map> getAlumnosApoderado(String cuenta_id) throws SQLException, Exception {
+        if (!VOCuenta.check(cuenta_id)) {
             throw new Exception("La cuenta no existe");
         }
-        if(!VOCuenta.getRolCuenta(cuenta_id).equals("1")){
-            throw new Exception("La cuenta no pertenece a un apoderado");
-        }
-        
         List<Map> list = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
@@ -232,25 +259,30 @@ public class VOAlumno {
         sb.append("WHERE alu.cuenta_id=?");
 
         Connection cnx = new Conexion().getConexion();
-        
+
         PreparedStatement stmt = cnx.prepareStatement(sb.toString());
         stmt.setString(1, cuenta_id);
 
         ResultSet rs = stmt.executeQuery();
 
-        while(rs.next()){
+        while (rs.next()) {
 
             Map map = new LinkedHashMap();
             map.put("alumno_id", rs.getString("alumno_id"));
             map.put("nombre", rs.getString("nombre"));
             map.put("apellido", rs.getString("apellido"));
-            map.put("curso_id", rs.getString("curso_id"));
+            map.put("curso_id", rs.getString("curso_id"));     
+            map.put("curso", "/api/cursos/"+rs.getString("curso_id"));
             map.put("nivel", rs.getString("nivel"));
             map.put("anio", rs.getString("anio"));
             map.put("escuela", rs.getString("escuela"));
 
+            map.put("depositos", "/api/alumnos/" + rs.getString("alumno_id") + "/depositos");
+
+            map.put("depositos_curso", "/api/cursos/" + rs.getString("curso_id") + "/depositos");
+
             list.add(map);
-            
+
         }
 
         return list;

@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.portafolio.api.vo.VOCuenta;
 import com.portafolio.api.vo.VODeposito;
+import com.portafolio.api.vo.VODepositoAlumno;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.DELETE;
@@ -31,21 +33,13 @@ import javax.ws.rs.core.Response;
 @Path("/alumnos")
 public class AlumnoService {
 
-    @POST
-    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @GET
+    @Path("{alumno_id}/depositos")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response save(
-            @DefaultValue("") @FormParam("nombre") String nombre,
-            @DefaultValue("") @FormParam("apellido") String apellido,
-            @DefaultValue("") @FormParam("sexo") String sexo,
-            @DefaultValue("") @FormParam("curso_id") String curso_id,
-            @DefaultValue("") @FormParam("cuenta_id") String cuenta_id
-    ) {
+    public Response find(@PathParam("alumno_id") String alumno_id) {
         Response res;
         try {
-            VOAlumno alumno = new VOAlumno(nombre, apellido, sexo, curso_id, cuenta_id);
-            alumno.save();
-            res = Response.ok().entity(alumno).build();
+            res = Response.ok().entity(VODepositoAlumno.getDepositos(alumno_id)).build();
         } catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());
@@ -54,7 +48,7 @@ public class AlumnoService {
 
         return res;
     }
-    
+
     @POST
     @Path("{alumno_id}/depositos")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
@@ -67,20 +61,40 @@ public class AlumnoService {
         Response res;
         try {
             int monto = Integer.parseInt(monto_string);
-            
+
             VODeposito deposito = new VODeposito(cuenta_id, '1', monto, ruta_comprobante);
             boolean depositado = deposito.depositoAlumno(alumno_id);
             res = Response.ok().entity(depositado).build();
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             Map msj = new HashMap();
             msj.put("message", "Ingresa correctamente el monto a depositar");
             res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());
             res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
         }
 
+        return res;
+    }
+
+    @DELETE
+    @Path("{alumno_id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response delete(@PathParam("alumno_id") String alumno_id) {
+        Response res;
+        try {
+            res = Response.ok().entity(VOAlumno.delete(alumno_id)).build();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            Map msj = new HashMap();
+            msj.put("message", "No se puede el eliminar el alumno");
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        } catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
         return res;
     }
 

@@ -5,7 +5,9 @@
  */
 package com.portafolio.api.vo;
 
+import com.portafolio.api.utils.Email;
 import com.portafolio.api.utils.Random;
+import com.portafolio.api.utils.Rut;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,24 +26,24 @@ import java.util.logging.Logger;
  * @author FRANCO
  */
 public class VOCuenta {
-    private String cuenta_id, rut,nombre, apellido_p, apellido_m, email, telefono, celular, password;
-    char sexo;
+    private String cuenta_id, rut,nombre, apellido_p, apellido_m, email, telefono, celular, password, sexo;
+    
     int rol_id;
 
     public VOCuenta() {
     }
 
-    public VOCuenta(String rut, String nombre, String apellido_p, String apellido_m, String email, String telefono, String celular, String password, char sexo, int rol_id) throws Exception{
+    public VOCuenta(String rut, String nombre, String apellido_p, String apellido_m, String email, String telefono, String celular, String password, String sexo, int rol_id) throws Exception{
         setId("");
         setRut(rut);
         setNombre(nombre);
         setApellido_p(apellido_p);
         setApellido_m(apellido_m);
+        setSexo(sexo);
         setEmail(email);
         setTelefono(telefono);
         setCelular(celular);
         setPassword(password);
-        setSexo(sexo);
         setRol_id(rol_id);
     } 
     
@@ -53,7 +55,16 @@ public class VOCuenta {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(String nombre) throws Exception {
+        if(nombre.trim().length()==0){
+            throw new Exception("Ingresa el nombre");
+        }
+        if(nombre.trim().length()<3){
+            throw new Exception("Nombre no valido");
+        }
+        if(nombre.trim().length()>15){
+            throw new Exception("Demasiados caracteres para el nombre(max 15)");
+        }
         this.nombre = nombre;
     }
 
@@ -73,7 +84,16 @@ public class VOCuenta {
         return rut;
     }
 
-    public void setRut(String rut) {
+    public void setRut(String rut) throws Exception {
+        if(rut.trim().length()==0){
+            throw new Exception("Ingresa el RUT");
+        }
+        if(!Rut.validar(rut)){
+            throw new Exception("RUT no valido");
+        }
+        if(VOCuenta.checkRut(rut)){
+            throw new Exception("El RUT ingresado ya se encuentra registrado");
+        }
         this.rut = rut;
     }
 
@@ -81,7 +101,14 @@ public class VOCuenta {
         return apellido_p;
     }
 
-    public void setApellido_p(String apellido_p) {
+    public void setApellido_p(String apellido_p) throws Exception {
+        if(apellido_p.trim().length()==0){
+            throw new Exception("Ingresa el apellido paterno");
+        }
+        
+        if(apellido_p.trim().length()>20){
+            throw new Exception("Demasiados caracteres para el apellido paterno(max 20)");
+        }
         this.apellido_p = apellido_p;
     }
 
@@ -89,17 +116,31 @@ public class VOCuenta {
         return apellido_m;
     }
 
-    public void setApellido_m(String apellido_m) {
+    public void setApellido_m(String apellido_m) throws Exception {
+        if(apellido_m.trim().length()==0){
+            throw new Exception("Ingresa el apellido materno");
+        }
+        if(apellido_m.trim().length()<3){
+            throw new Exception("Apellido materno no valido");
+        }
+        if(apellido_m.trim().length()>20){
+            throw new Exception("Demasiados caracteres para el apellido materno(max 20)");
+        }
         this.apellido_m = apellido_m;
     }
 
     
 
-    public char getSexo() {
+    public String getSexo() {
         return sexo;
     }
 
-    public void setSexo(char sexo) {
+    public void setSexo(String sexo) throws Exception {
+        if (sexo.toUpperCase().equals("M") || sexo.toUpperCase().equals("F")) {
+            this.sexo = sexo.toUpperCase();
+        } else {
+            throw new Exception("Selecciona correctamente el sexo");
+        }
         this.sexo = sexo;
     }
     
@@ -112,6 +153,12 @@ public class VOCuenta {
         if(email.trim().length()==0){
             throw new Exception("Ingresa un correo electronico");
         }
+        if(apellido_m.trim().length()>60){
+            throw new Exception("Demasiados caracteres para el correo(max 60)");
+        }
+        if(!Email.validar(email)){
+            throw new Exception("Ingresa correctamente el correo electronico");
+        }
         this.email = email;
     }
 
@@ -119,7 +166,11 @@ public class VOCuenta {
         return telefono;
     }
 
-    public void setTelefono(String telefono) {
+    public void setTelefono(String telefono) throws Exception {
+        
+        if(telefono.trim().length()>30){
+            throw new Exception("Demasiados caracteres para el telefono(max 15)");
+        }
         this.telefono = telefono;
     }
 
@@ -127,7 +178,10 @@ public class VOCuenta {
         return celular;
     }
 
-    public void setCelular(String celular) {
+    public void setCelular(String celular) throws Exception {
+        if(celular.trim().length()>9){
+            throw new Exception("Demasiados caracteres para el celular(max 9)");
+        }
         this.celular = celular;
     }
 
@@ -139,6 +193,12 @@ public class VOCuenta {
         if(password.trim().length()==0){
             throw new Exception("Ingresa una contraseña");
         }
+        if(password.trim().length()<6){
+            throw new Exception("Contraseña demasiada corta (min 6)");
+        }
+        if(password.trim().length()>30){
+            throw new Exception("Demasiados caracteres para la contraseña(max 30)");
+        }
         this.password = password;
     }
 
@@ -146,7 +206,13 @@ public class VOCuenta {
         return rol_id;
     }
 
-    public void setRol_id(int rol_id) {
+    public void setRol_id(int rol_id) throws Exception {
+        if(rol_id==0){
+            throw new Exception("Ingresa el rol de la cuenta");
+        }
+        if(!VOCuentaRol.check(rol_id)){
+            throw new Exception("El rol ingresado no existe");
+        }
         this.rol_id = rol_id;
     }
 
@@ -166,9 +232,43 @@ public class VOCuenta {
             return false;
         }
     }
+    public static boolean checkRut(String rut) throws Exception, SQLException{
+        boolean resultado = false;
+        String sql = "SELECT rut FROM cuenta WHERE rut=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, rut);
+        ResultSet rs = stmt.executeQuery();
+        
+        
+        if(rs.next()){
+            resultado = true;
+        }
+        cnx.close();
+        return resultado;
+    }
+    public static boolean checkEmail(String email) throws Exception, SQLException{
+        String sql = "SELECT cuenta_id FROM cuenta WHERE email=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
+        
+        
+        if(rs.next()){
+            return true;
+        }else {
+            return false;
+        }
+    }
     
-    public static List<VOCuenta> all() throws Exception, SQLException{
-        List<VOCuenta> list = new ArrayList<>();
+    
+    public static List<Map> all() throws Exception, SQLException{
+        List<Map> list = new ArrayList<>();
         
         String sql = "SELECT * FROM cuenta";
        
@@ -178,18 +278,20 @@ public class VOCuenta {
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
                 System.out.println("Fila encontrada");
-                VOCuenta cuenta = new VOCuenta();
-                cuenta.cuenta_id = rs.getString("cuenta_id");
-                cuenta.rut = rs.getString("rut");
-                cuenta.nombre = rs.getString("nombre");
-                cuenta.apellido_p = rs.getString("apellido_p");
-                cuenta.apellido_m = rs.getString("apellido_m");
-                cuenta.sexo = rs.getString("sexo").charAt(0);
-                cuenta.email = rs.getString("email");
-                cuenta.telefono = rs.getString("telefono");
-                cuenta.celular = rs.getString("celular");
-                cuenta.rol_id = rs.getInt("rol_id");
-                list.add(cuenta);
+                
+                Map map = new LinkedHashMap();
+                
+                map.put("cuenta_id", rs.getString("cuenta_id"));
+                map.put("rut", rs.getString("rut"));
+                map.put("nombre", rs.getString("nombre"));
+                map.put("apellido_p", rs.getString("apellido_p"));
+                map.put("apellido_m", rs.getString("apellido_m"));
+                map.put("sexo", rs.getString("sexo").charAt(0));
+                map.put("email", rs.getString("email"));
+                map.put("telefono", rs.getString("telefono"));
+                map.put("celular", rs.getString("celular"));
+                map.put("rol_id", rs.getInt("rol_id"));
+                list.add(map);
                 
             }
             if(list.isEmpty()){
@@ -199,8 +301,8 @@ public class VOCuenta {
     }
     
     
-    public static VOCuenta find(String cuenta_id) throws Exception, SQLException{
-        VOCuenta cuenta = null;
+    public static Map find(String cuenta_id) throws Exception, SQLException{
+        Map cuenta = null;
         String sql = "SELECT * FROM cuenta WHERE cuenta_id=?";
        
         Connection cnx = new Conexion().getConexion();
@@ -209,19 +311,21 @@ public class VOCuenta {
         stmt.setString(1, cuenta_id);
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){
+            cuenta = new LinkedHashMap();
             
-            cuenta = new VOCuenta();
+            cuenta.put("cuenta_id", cuenta_id);
+            cuenta.put("rut", rs.getString("rut"));
+            cuenta.put("nombre", rs.getString("nombre"));
+            cuenta.put("apellido_p", rs.getString("apellido_p"));
+            cuenta.put("apellido_m", rs.getString("apellido_m"));
+            cuenta.put("sexo", rs.getString("sexo").charAt(0));
+            cuenta.put("email", rs.getString("email"));
+            cuenta.put("telefono", rs.getString("telefono"));
+            cuenta.put("celular", rs.getString("celular"));
+            cuenta.put("rol_id", rs.getInt("rol_id"));
             
-            cuenta.cuenta_id = rs.getString("cuenta_id");
-            cuenta.rut = rs.getString("rut");
-            cuenta.nombre = rs.getString("nombre");
-            cuenta.apellido_p = rs.getString("apellido_p");
-            cuenta.apellido_m = rs.getString("apellido_m");
-            cuenta.sexo = rs.getString("sexo").charAt(0);
-            cuenta.email = rs.getString("email");
-            cuenta.telefono = rs.getString("telefono");
-            cuenta.celular = rs.getString("celular");
-            cuenta.rol_id = rs.getInt("rol_id");
+            cuenta.put("alumnos", "/api/cuentas/"+cuenta_id+"/alumnos");
+            
 
         }
         if(cuenta==null){
@@ -278,7 +382,12 @@ public class VOCuenta {
     
     
     public int save() throws Exception, SQLException{
+        
         int resultado = 0;
+        
+        if(VOCuenta.checkEmail(email)){
+            throw new Exception("El correo ya se encuentra registrado");
+        }
         
         String sql = "INSERT INTO cuenta(cuenta_id, rut, nombre, apellido_p, apellido_m, sexo, email, telefono, celular, password, rol_id) ";
         sql+= "VALUES(?,?,?,?,?,?,?,?,?,?,?)";

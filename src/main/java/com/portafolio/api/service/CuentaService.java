@@ -95,7 +95,7 @@ public class CuentaService {
             cuenta.setNombre(nombre);
             cuenta.setApellido_p(apellido_p);
             cuenta.setApellido_m(apellido_m);
-            cuenta.setSexo(sexo.charAt(0));
+            cuenta.setSexo(sexo);
             cuenta.setEmail(email);
             cuenta.setTelefono(telefono);
             cuenta.setCelular(celular);
@@ -135,7 +135,7 @@ public class CuentaService {
             @DefaultValue("") @FormParam("nombre") String nombre,
             @DefaultValue("") @FormParam("apellido_p") String apellido_p,
             @DefaultValue("") @FormParam("apellido_m") String apellido_m,
-            @DefaultValue("N") @FormParam("sexo") String sexo,
+            @DefaultValue("") @FormParam("sexo") String sexo,
             @DefaultValue("") @FormParam("email") String email,
             @DefaultValue("") @FormParam("telefono") String telefono,
             @DefaultValue("") @FormParam("celular") String celular,
@@ -147,7 +147,7 @@ public class CuentaService {
             int rol_id = Integer.parseInt(rol_id_string);
             
             VOCuenta cuentax = new VOCuenta(rut, nombre, apellido_p, apellido_m,
-                    email, telefono, celular, password, sexo.charAt(0), rol_id);
+                    email, telefono, celular, password, sexo, rol_id);
             cuentax.save();
             res = Response.ok().entity(cuentax).build();
         }catch (NumberFormatException e) {
@@ -183,6 +183,31 @@ public class CuentaService {
             res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
         }
         
+        return res;
+    }
+    @POST
+    @Path("{cuenta_id}/alumnos")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response save(
+            @PathParam("cuenta_id") String cuenta_id,
+            @DefaultValue("") @FormParam("nombre") String nombre,
+            @DefaultValue("") @FormParam("apellido") String apellido,
+            @DefaultValue("") @FormParam("sexo") String sexo,
+            @DefaultValue("") @FormParam("curso_id") String curso_id
+            
+    ) {
+        Response res;
+        try {
+            VOAlumno alumno = new VOAlumno(nombre, apellido, sexo, curso_id, cuenta_id);
+            alumno.save();
+            res = Response.ok().entity(alumno).build();
+        } catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+
         return res;
     }
     

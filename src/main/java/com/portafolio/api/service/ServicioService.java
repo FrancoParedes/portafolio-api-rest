@@ -6,21 +6,19 @@
 package com.portafolio.api.service;
 
 import com.portafolio.api.vo.VOActividad;
+import com.portafolio.api.vo.VOEscuela;
+import com.portafolio.api.vo.VOServicio;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import com.portafolio.api.vo.VOCuenta;
-import com.portafolio.api.vo.VODestino;
-import com.portafolio.api.vo.VOServicio;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
@@ -28,46 +26,16 @@ import javax.ws.rs.core.Response;
  *
  * @author FRANCO
  */
-@Path("/destinos")
-public class DestinoService {
+@Path("/servicios")
+public class ServicioService {
     
     @GET
+    @Path("{servicio_id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getDestinos(){
+    public Response find(@PathParam("escuela_id") String escuela_id){
         Response res;
         try {
-            res = Response.ok().entity(VODestino.all()).build();
-        }catch (Exception e) {
-            Map msj = new HashMap();
-            msj.put("message", e.getMessage());
-            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
-        }
-                
-        return res;
-    }
-    
-    @GET
-    @Path("{destino_id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response find(@PathParam("destino_id") String destino_id){
-        Response res;
-        try {
-            res = Response.ok().entity(VODestino.find(destino_id)).build();
-        } catch (Exception ex) {
-            Map msj = new HashMap();
-            msj.put("message", ex.getMessage());
-            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
-        }
-        
-        return res;
-    }
-    @GET
-    @Path("{destino_id}/servicios")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response servicios(@PathParam("destino_id") String destino_id){
-        Response res;
-        try {
-            res = Response.ok().entity(VOServicio.all(destino_id)).build();
+            res = Response.ok().entity(VOEscuela.find(escuela_id)).build();
         } catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());
@@ -78,12 +46,12 @@ public class DestinoService {
     }
     
     @DELETE
-    @Path("{destino_id}")
+    @Path("{escuela_id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response delete(@PathParam("destino_id") String destino_id){
+    public Response delete(@PathParam("escuela_id") String escuela_id){
         Response res;
         try {
-            res = Response.ok().entity(VODestino.delete(destino_id)).build();
+            res = Response.ok().entity(VOEscuela.delete(escuela_id)).build();
         } catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());
@@ -96,13 +64,15 @@ public class DestinoService {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
     public Response save(
-            @DefaultValue("") @FormParam("nombre") String nombre)
+            @DefaultValue("") @FormParam("nombre") String nombre,
+            @DefaultValue("") @FormParam("ciudad") String ciudad,
+            @DefaultValue("") @FormParam("region_id") String region_id)
             { 
         Response res;
         try {
-            VODestino destino = new VODestino(nombre);
-            destino.save();
-            res = Response.ok().entity(destino).build();
+            VOEscuela escuelax = new VOEscuela(nombre, ciudad, region_id);
+            escuelax.save();
+            res = Response.ok().entity(escuelax).build();
         } catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());

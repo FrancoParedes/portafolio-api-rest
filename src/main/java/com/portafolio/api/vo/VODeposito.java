@@ -104,7 +104,7 @@ public class VODeposito {
     public static List<Map> allByCourse(String curso_id) throws SQLException, Exception{
         if(!VOCurso.check(curso_id)){
             throw new Exception("El curso seleccionado no existe");
-        }
+        } 
         List<Map> list = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();

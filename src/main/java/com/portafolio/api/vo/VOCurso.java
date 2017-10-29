@@ -236,12 +236,21 @@ public class VOCurso {
             destino.put("nombre", rs.getString("destino_nombre"));
             
             
+            
             map.put("curso_id", rs.getString("curso_id"));
             map.put("nivel", rs.getString("nivel"));
             map.put("anio", rs.getString("anio"));
             map.put("representante", representante);
             map.put("escuela", escuela);
             map.put("destino",  destino);
+            
+            try{
+                map.put("servicios", VOCursoServicio.all(curso_id));
+            }catch(Exception ex){
+                System.out.println(ex.getMessage());
+                map.put("servicios", null);
+            }
+            
             map.put("monto_meta", rs.getInt("monto_meta"));
             map.put("fecha_viaje", rs.getDate("fecha_viaje"));
             map.put("alumnos", VOAlumno.listByCourses(rs.getString("curso_id")));

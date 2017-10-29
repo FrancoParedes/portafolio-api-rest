@@ -7,7 +7,12 @@ package com.portafolio.api.vo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,6 +48,38 @@ public class VODepositoAlumno {
         this.deposito_id = deposito_id;
     }
     
+    public static List<Map> getDepositos(String alumno_id) throws SQLException, Exception {
+        
+        List<Map> list = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+        
+
+
+
+        sb.append("SELECT d.deposito_id, d.monto, d.fecha FROM deposito d ");
+        sb.append("INNER JOIN deposito_alumno da ON d.deposito_id=da.deposito_id ");
+        sb.append("WHERE da.alumno_id=? ");
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sb.toString());
+        stmt.setString(1, alumno_id);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+
+            Map map = new LinkedHashMap();
+            map.put("deposito_id", rs.getString("deposito_id"));
+            map.put("monto", rs.getInt("monto"));
+            map.put("fecha", rs.getString("fecha"));
+
+            list.add(map);
+
+        }
+
+        return list;
+    }
     public int save(Connection cnx) throws Exception, SQLException{
         int resultado = 0;
         

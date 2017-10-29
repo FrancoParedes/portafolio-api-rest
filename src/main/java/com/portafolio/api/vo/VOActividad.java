@@ -39,6 +39,9 @@ public class VOActividad {
         if (nombre.trim().length()==0) {
             throw new Exception("Ingresa un nombre para la actividad");
         }
+        if (nombre.trim().length()>15) {
+            throw new Exception("Nombre de la actividad demasiado largo(max 15)");
+        }
         this.nombre = nombre;
     }
 

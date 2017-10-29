@@ -153,7 +153,7 @@ public class VOCuenta {
         if(email.trim().length()==0){
             throw new Exception("Ingresa un correo electronico");
         }
-        if(apellido_m.trim().length()>60){
+        if(email.trim().length()>60){
             throw new Exception("Demasiados caracteres para el correo(max 60)");
         }
         if(!Email.validar(email)){
@@ -420,7 +420,7 @@ public class VOCuenta {
         return resultado;
     }
     
-    public Map<String, String> iniciar() throws SQLException, Exception{
+    public  Map<String, String> iniciar() throws SQLException, Exception{
         Map<String, String> cuenta = null;
         String sql = "SELECT * FROM cuenta WHERE email=? AND password=?";
        

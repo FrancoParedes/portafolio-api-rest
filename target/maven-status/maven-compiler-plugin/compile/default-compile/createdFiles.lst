@@ -6,6 +6,7 @@ com\portafolio\api\vo\VOCuenta.class
 com\portafolio\api\service\UsuarioService.class
 com\portafolio\api\service\ServicioService.class
 com\portafolio\api\utils\Email.class
+com\portafolio\api\vo\VOCursoServicio.class
 com\portafolio\api\service\AlumnoService.class
 com\portafolio\api\vo\Conexion.class
 com\portafolio\api\service\CursoService.class
@@ -22,5 +23,6 @@ com\portafolio\api\service\EscuelaService.class
 com\portafolio\api\service\CuentaService.class
 com\portafolio\api\utils\Random.class
 com\portafolio\api\vo\VODestino.class
+com\portafolio\api\service\DepositoService.class
 com\portafolio\api\vo\Main.class
 com\portafolio\api\utils\Rut.class

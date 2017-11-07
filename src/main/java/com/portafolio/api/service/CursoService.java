@@ -153,4 +153,29 @@ public class CursoService {
 
         return res;
     }
+    @PUT
+    @Path("{curso_id}/contrato")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response registrarContrato(
+            @DefaultValue("") @FormParam("contrato_ruta") String contrato_ruta,
+            @PathParam("curso_id") String curso_id
+    ) {
+        Response res;
+        try {
+            boolean registrado = VOCuenta.registrarContrato(curso_id, contrato_ruta);
+            
+            res = Response.ok().entity(registrado).build();
+        }catch (NumberFormatException e) {
+            Map msj = new HashMap();
+            msj.put("message", "Ingresa correctamente el monto");
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+
+        return res;
+    }
 }

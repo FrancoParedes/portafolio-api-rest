@@ -6,6 +6,7 @@ C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\service\EscuelaService.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\utils\Random.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VODepositoCurso.java
+C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\service\DepositoService.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VODeposito.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VOActividad.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\service\AlumnoService.java
@@ -17,6 +18,7 @@ C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VODepositoTipo.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\service\UsuarioService.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VOCuenta.java
+C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VOCursoServicio.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VOEscuela.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\service\CuentaService.java
 C:\Users\FRANCO\Documents\NetBeansProjects\Api\src\main\java\com\portafolio\api\vo\VODepositoAlumno.java

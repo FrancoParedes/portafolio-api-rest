@@ -140,6 +140,46 @@ public class VODeposito {
         return list;
     }
 
+    public static boolean aprobar(String deposito_id) throws SQLException{ 
+        
+        String sql = "UPDATE deposito SET aprobado=1 WHERE deposito_id=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, deposito_id);
+
+        System.out.println("DEPOSITO APROBADO: " + deposito_id);
+
+        int resultado = stmt.executeUpdate();
+        cnx.close();
+        System.out.println("Resultado de la actualizacion:" + resultado);
+        if (resultado == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static boolean rechazar(String deposito_id) throws SQLException{ 
+        
+        String sql = "UPDATE deposito SET aprobado=2 WHERE deposito_id=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, deposito_id);
+
+        System.out.println("DEPOSITO RECHAZADO: " + deposito_id);
+
+        int resultado = stmt.executeUpdate();
+        cnx.close();
+        System.out.println("Resultado de la actualizacion:" + resultado);
+        if (resultado == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public boolean depositoCurso(String curso_id, String actividad_id, String actividad_fecha) throws Exception, SQLException{
         boolean exito = false;
         int resultado = 0;

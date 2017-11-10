@@ -64,8 +64,10 @@ public class VODestino {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -87,6 +89,7 @@ public class VODestino {
                 list.add(destino);
                 
             }
+            cnx.close();
             if(list.isEmpty()){
                 throw new Exception("No se encontraron actividades registradas");
             }
@@ -111,6 +114,7 @@ public class VODestino {
             destino.nombre = rs.getString("nombre");
 
         }
+        cnx.close();
         if(destino==null){
             throw new Exception("No existe el destino seleccioado");
         }
@@ -127,6 +131,7 @@ public class VODestino {
         
         
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if(resultado==1){
             return true;
@@ -152,7 +157,7 @@ public class VODestino {
         resultado = stmt.executeUpdate();
 
         stmt.close();
-        
+        cnx.close();
         if(resultado==0){
             throw new Exception("No se ha registrado el destino");
         }

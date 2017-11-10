@@ -93,8 +93,10 @@ public class VOEscuela {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -123,6 +125,7 @@ public class VOEscuela {
             list.add(map);
 
         }
+        cnx.close();
         if (list.isEmpty()) {
             throw new Exception("No se encontraron cuentas registradas");
         }
@@ -152,6 +155,7 @@ public class VOEscuela {
             map.put("region", region);
 
         }
+        cnx.close();
         if (map == null) {
             throw new Exception("No existe la escuela seleccionada");
         }
@@ -168,6 +172,7 @@ public class VOEscuela {
         stmt.setString(1, escuela_id);
 
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if (resultado == 1) {
             return true;
@@ -194,6 +199,7 @@ public class VOEscuela {
         resultado = stmt.executeUpdate();
 
         stmt.close();
+        cnx.close();
 
         if (resultado == 0) {
             throw new Exception("No se ha registrado la escuela");

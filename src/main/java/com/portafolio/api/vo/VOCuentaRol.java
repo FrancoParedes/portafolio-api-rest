@@ -38,8 +38,10 @@ public class VOCuentaRol {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }

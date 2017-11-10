@@ -81,8 +81,10 @@ public class VOServicio {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -108,6 +110,7 @@ public class VOServicio {
             list.add(map);
 
         }
+        cnx.close();
         if (list.isEmpty()) {
             throw new Exception("No se encontraron servicios para el destino seleccionado");
         }
@@ -134,6 +137,7 @@ public class VOServicio {
             map.put("precio", rs.getInt("precio"));
 
         }
+        cnx.close();
         if (map == null) {
             throw new Exception("No existe el servicio seleccionado");
         }
@@ -150,6 +154,7 @@ public class VOServicio {
         stmt.setString(1, servicio_id);
 
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if (resultado == 1) {
             return true;
@@ -176,6 +181,7 @@ public class VOServicio {
         resultado = stmt.executeUpdate();
 
         stmt.close();
+        cnx.close();
 
         if (resultado == 0) {
             throw new Exception("No se ha registrado el servicio");

@@ -194,6 +194,7 @@ public class VOCurso {
                 list.add(map);
                 
             }
+            cnx.close();
             if(list.isEmpty()){
                 throw new Exception("No se encontraron cuentas registradas");
             }
@@ -273,8 +274,10 @@ public class VOCurso {
         
         
         if(rs.next()){
+            cnx.close();
             return true;
         }else {
+            cnx.close();
             return false;
         }
     }
@@ -301,7 +304,7 @@ public class VOCurso {
         resultado = stmt.executeUpdate();
 
         stmt.close();
-        
+        cnx.close();
         if(resultado==0){
             throw new Exception("No se ha registrado el curso");
         }

@@ -123,8 +123,10 @@ public class VOAlumno {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -140,8 +142,10 @@ public class VOAlumno {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -156,6 +160,7 @@ public class VOAlumno {
         stmt.setString(1, alumno_id);
 
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if (resultado == 1) {
             return true;
@@ -185,6 +190,7 @@ public class VOAlumno {
 
         stmt.close();
 
+        cnx.close();
         if (resultado == 0) {
             throw new Exception("No se ha registrado el alumno");
         }
@@ -225,6 +231,7 @@ public class VOAlumno {
 
         }
 
+        cnx.close();
         return list;
     }
 
@@ -242,6 +249,7 @@ public class VOAlumno {
             num = rs.getInt("count");
         }
 
+        cnx.close();
         return num;
     }
 
@@ -284,6 +292,7 @@ public class VOAlumno {
             list.add(map);
 
         }
+        cnx.close();
 
         return list;
     }

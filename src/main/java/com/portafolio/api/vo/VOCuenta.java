@@ -225,8 +225,10 @@ public class VOCuenta {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -242,6 +244,7 @@ public class VOCuenta {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            
             resultado = true;
         }
         cnx.close();
@@ -258,8 +261,10 @@ public class VOCuenta {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -291,6 +296,7 @@ public class VOCuenta {
             list.add(map);
 
         }
+        cnx.close();
         if (list.isEmpty()) {
             throw new Exception("No se encontraron cuentas registradas");
         }
@@ -323,6 +329,7 @@ public class VOCuenta {
             cuenta.put("alumnos", "/api/cuentas/" + cuenta_id + "/alumnos");
 
         }
+        cnx.close();
         if (cuenta == null) {
             throw new Exception("No existe el numero de cuenta");
         }
@@ -349,6 +356,7 @@ public class VOCuenta {
         System.out.println("ID CUENTA: " + this.cuenta_id);
 
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la actualizacion:" + resultado);
         if (resultado == 1) {
             return true;
@@ -361,18 +369,22 @@ public class VOCuenta {
         int resultado = 0;
         String sql = "DELETE FROM cuenta WHERE cuenta_id=?";
 
+        Connection cnx = new Conexion().getConexion();
         try {
-            Connection cnx = new Conexion().getConexion();
+            
 
             PreparedStatement stmt = cnx.prepareStatement(sql);
 
             stmt.setString(1, cuenta_id);
 
             resultado = stmt.executeUpdate();
+            
 
         } catch (SQLException ex) {
+            cnx.close();
             throw new Exception("Ya no puedes eliminar esta cuenta");
-        }
+        } 
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if (resultado == 1) {
             return true;
@@ -411,6 +423,7 @@ public class VOCuenta {
         resultado = stmt.executeUpdate();
 
         stmt.close();
+        cnx.close();
 
         if (resultado == 0) {
             throw new Exception("No se ha registrado la cuenta");
@@ -441,6 +454,7 @@ public class VOCuenta {
             cuenta.put("rol_id", rs.getString("rol_id"));
 
         }
+        cnx.close();
         if (cuenta == null) {
             throw new Exception("El correo electronico y/o la contraseña no coinciden");
         }
@@ -462,6 +476,7 @@ public class VOCuenta {
             rol_id = rs.getString("rol_id");
         }
 
+        cnx.close();
         return rol_id;
     }
     

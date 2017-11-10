@@ -65,8 +65,10 @@ public class VOCursoServicio {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
+            cnx.close();
             return true;
         } else {
+            cnx.close();
             return false;
         }
     }
@@ -95,6 +97,7 @@ public class VOCursoServicio {
             list.add(map);
 
         }
+        cnx.close();
         if (list.isEmpty()) {
             throw new Exception("El curso no ha contratado servicios");
         }
@@ -111,6 +114,7 @@ public class VOCursoServicio {
         stmt.setString(1, servicio_id);
 
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if (resultado == 1) {
             return true;

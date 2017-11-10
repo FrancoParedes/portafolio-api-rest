@@ -52,6 +52,8 @@ public class VODepositoTipo {
         resultado = stmt.executeUpdate();
 
         stmt.close();
+        cnx.close();
+        
         
         if(resultado==0){
             throw new Exception("No se ha registrado el tipo de deposito");

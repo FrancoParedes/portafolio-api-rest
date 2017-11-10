@@ -68,8 +68,10 @@ public class VOActividad {
         
         
         if(rs.next()){
+            cnx.close();
             return true;
         }else {
+            cnx.close();
             return false;
         }
     }
@@ -94,6 +96,8 @@ public class VOActividad {
             if(list.isEmpty()){
                 throw new Exception("No se encontraron actividades registradas");
             }
+            
+        cnx.close();
         return list;
     }
     
@@ -118,6 +122,7 @@ public class VOActividad {
         if(actividad==null){
             throw new Exception("No existe la actividad");
         }
+        cnx.close();
         return actividad;
     }    
     public static boolean delete(String actividad_id) throws Exception, SQLException{
@@ -131,9 +136,11 @@ public class VOActividad {
         
         
         int resultado = stmt.executeUpdate();
+        cnx.close();
         System.out.println("Resultado de la eliminacion:" + resultado);
         if(resultado==1){
             return true;
+            
         }else {
             return false;
         }
@@ -156,7 +163,7 @@ public class VOActividad {
         resultado = stmt.executeUpdate();
 
         stmt.close();
-        
+        cnx.close();
         if(resultado==0){
             throw new Exception("No se ha registrado la actividad");
         }

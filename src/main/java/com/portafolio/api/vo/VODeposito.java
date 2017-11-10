@@ -137,6 +137,7 @@ public class VODeposito {
             list.add(map);
         }
 
+        cnx.close();
         return list;
     }
 

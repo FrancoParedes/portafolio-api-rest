@@ -112,7 +112,6 @@ public class VODepositoCurso {
 
         resultado = stmt.executeUpdate();
  
-        cnx.close();
         if(resultado==0){
             throw new Exception("No se ha registrado el deposito del curso");
         }

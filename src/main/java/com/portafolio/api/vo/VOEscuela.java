@@ -42,10 +42,18 @@ public class VOEscuela {
     }
 
     public void setNombre(String nombre) throws Exception {
+        nombre = nombre.toUpperCase();
+        
         if (nombre.trim().length() == 0) {
             throw new Exception("Escribe el nombre de la escuela");
         }
-        this.nombre = nombre.toUpperCase();
+        if (nombre.trim().length() >60) {
+            throw new Exception("Demasiados caracteres para el nombre");
+        }
+        if(VOEscuela.checkNombre(nombre)){
+            throw new Exception("Ya se encuentra registrada la escuela");
+        }
+        this.nombre = nombre;
     }
 
     public String getEscuela_id() {
@@ -65,9 +73,13 @@ public class VOEscuela {
     }
 
     public void setRegion_id(String region_id) throws Exception {
-
+        region_id = region_id.toUpperCase();
+        
         if (region_id.trim().length() == 0) {
             throw new Exception("Selecciona la region");
+        }
+        if(!VORegion.check(region_id)){
+            throw new Exception("Region invalida");
         }
         this.region_id = region_id;
     }
@@ -80,6 +92,9 @@ public class VOEscuela {
         if (ciudad.trim().length() == 0) {
             throw new Exception("Ingresa una ciudad");
         }
+        if (ciudad.trim().length() >25) {
+            throw new Exception("Demasiados caracteres para la ciudad");
+        }
         this.ciudad = ciudad.toUpperCase();
     }
 
@@ -90,6 +105,23 @@ public class VOEscuela {
 
         PreparedStatement stmt = cnx.prepareStatement(sql);
         stmt.setString(1, escuela_id);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            cnx.close();
+            return true;
+        } else {
+            cnx.close();
+            return false;
+        }
+    }
+    public static boolean checkNombre(String nombre) throws Exception, SQLException {
+        String sql = "SELECT escuela_id FROM escuela WHERE nombre=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, nombre);
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
@@ -183,7 +215,7 @@ public class VOEscuela {
 
     public int save() throws Exception, SQLException {
         int resultado = 0;
-
+   
         String sql = "INSERT INTO escuela(escuela_id, nombre, ciudad, region_id) ";
         sql += "VALUES(?,?,?,?)";
 

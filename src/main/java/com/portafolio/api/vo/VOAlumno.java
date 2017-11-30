@@ -27,6 +27,10 @@ public class VOAlumno {
     }
 
     public VOAlumno(String nombre, String apellido, String sexo, String curso_id, String cuenta_id) throws Exception {
+        if(!VOCuenta.getRolCuenta(cuenta_id).equals("1") && !VOCuenta.getRolCuenta(cuenta_id).equals("3")){
+            throw new Exception("Solo un apoderado o representante puede contener alumnos");
+        }
+        
         setId();
         setNombre(nombre);
         setApellido(apellido);
@@ -205,11 +209,11 @@ public class VOAlumno {
 
         sql.append("SELECT  alu.alumno_id, alu.nombre, alu.apellido, alu.cuenta_id, sum(s.precio) as meta,");
         sql.append("(SELECT sum(monto) FROM deposito d ");
-        sql.append("INNER JOIN deposito_alumno da ON d.deposito_id=da.deposito_id WHERE da.alumno_id=alu.alumno_id) AS actual, ");
-        sql.append("(SELECT sum(prorrateo) FROM deposito_curso where curso_id=alu.curso_id) AS prorrateo ");
+        sql.append("LEFT JOIN deposito_alumno da ON d.deposito_id=da.deposito_id WHERE da.alumno_id=alu.alumno_id) AS actual, ");
+        sql.append("(SELECT sum(nvl(prorrateo, 0)) FROM deposito_curso where curso_id=alu.curso_id) AS prorrateo ");
         sql.append("FROM alumno alu ");
-        sql.append("INNER JOIN curso_servicio cs on alu.curso_id=cs.curso_id ");
-        sql.append("INNER JOIN servicio s on cs.servicio_id=s.servicio_id ");
+        sql.append("LEFT JOIN curso_servicio cs on alu.curso_id=cs.curso_id ");
+        sql.append("LEFT  JOIN servicio s on cs.servicio_id=s.servicio_id ");
         sql.append("WHERE alu.curso_id=? ");
         sql.append("GROUP BY alu.alumno_id,alu.nombre, alu.apellido,alu.cuenta_id, alu.curso_id ");
         sql.append("ORDER BY alu.apellido");

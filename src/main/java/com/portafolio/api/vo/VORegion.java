@@ -5,6 +5,11 @@
  */
 package com.portafolio.api.vo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author FRANCO
@@ -33,5 +38,21 @@ public class VORegion {
         this.nombre = nombre;
     }
     
-    
+    public static boolean check(String region_id) throws Exception, SQLException {
+        String sql = "SELECT region_id FROM region WHERE region_id=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, region_id);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            cnx.close();
+            return true;
+        } else {
+            cnx.close();
+            return false;
+        }
+    }
 }

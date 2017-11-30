@@ -76,6 +76,24 @@ public class VOActividad {
         }
     }
     
+    public static boolean checkNombre(String nombre) throws Exception, SQLException{
+        String sql = "SELECT actividad_id FROM actividad WHERE nombre=?";
+       
+        Connection cnx = new Conexion().getConexion();
+        
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, nombre);
+        ResultSet rs = stmt.executeQuery();
+        
+        
+        if(rs.next()){
+            cnx.close();
+            return true;
+        }else {
+            cnx.close();
+            return false;
+        }
+    }
     public static List<VOActividad> all() throws Exception, SQLException{
         List<VOActividad> list = new ArrayList<>();
         
@@ -149,7 +167,9 @@ public class VOActividad {
     
     public int save() throws Exception, SQLException{
         int resultado = 0;
-        
+        if(VOActividad.checkNombre(this.nombre)){
+            throw new Exception("Ya se encuentra registrada esta actividad");
+        }
         String sql = "INSERT INTO actividad(actividad_id, nombre) ";
         sql+= "VALUES(?,?)";
         

@@ -15,10 +15,10 @@ import java.sql.DriverManager;
  * @author FRANCO
  */
 public class Conexion {
-    String usuario = "C##_equipo2";
-    String password = "portafolio02";
+    String usuario = "INGRESA USUARIO BD";
+    String password = "CONTRASEÑA BD";
 
-    String host = "165.227.213.232"; // tambien puede ser una ip como "192.168.1.14"
+    String host = "HOST"; // tambien puede ser una ip como "192.168.1.14"
     String puerto = "1521";
     String sid = "dbportafolio";
 

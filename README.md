@@ -1,4 +1,4 @@
-API REST para el ramo de porfalio.
+API REST para el ramo de portafolio.
 
 Para verla funcionando ingresar a 
 https://thawing-forest-71712.herokuapp.com/

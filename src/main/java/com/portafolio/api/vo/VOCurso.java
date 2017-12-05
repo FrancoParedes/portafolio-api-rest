@@ -204,7 +204,7 @@ public class VOCurso {
     
     public static Map find(String curso_id) throws Exception, SQLException{
         Map map = null;
-        String sql = "SELECT c.curso_id, c.cuenta_id, c.escuela_id, c.destino_id, c.monto_meta, c.fecha_viaje, c.nivel, c.anio, ";
+        String sql = "SELECT c.curso_id, c.cuenta_id, c.contrato_ruta, c.escuela_id, c.destino_id, c.monto_meta, c.fecha_viaje, c.nivel, c.anio, ";
         sql+="e.nombre AS escuela_nombre, d.nombre AS destino_nombre, cta.nombre || ' ' || cta.apellido_p AS nombre_representante, ";
         sql+="cta.telefono, cta.celular, cta.email ";
         sql+="FROM curso c ";
@@ -255,7 +255,7 @@ public class VOCurso {
             map.put("monto_meta", rs.getInt("monto_meta"));
             map.put("fecha_viaje", rs.getDate("fecha_viaje"));
             map.put("alumnos", VOAlumno.listByCourses(rs.getString("curso_id")));
-                    
+            map.put("contrato_ruta", rs.getString("contrato_ruta"));        
 
         }
         if(map==null){
@@ -312,4 +312,82 @@ public class VOCurso {
         
         return resultado;
     }
+    public static boolean registrarContrato(String curso_id, String contrato_ruta) throws SQLException, Exception{ 
+        //Valida el contrato
+        validarContrato(curso_id, contrato_ruta);
+        
+        String sql = "UPDATE curso SET contrato_ruta=? WHERE curso_id=?";
+
+        Connection cnx = new Conexion().getConexion();
+
+        PreparedStatement stmt = cnx.prepareStatement(sql);
+        stmt.setString(1, contrato_ruta);
+        stmt.setString(2, curso_id);
+
+        int resultado = stmt.executeUpdate();
+        cnx.close();
+        System.out.println("Resultado de la actualizacion:" + resultado);
+        if (resultado == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    private static void validarContrato(String curso_id, String contrato_ruta) throws Exception{
+        if (contrato_ruta.trim().length()==0) {
+            throw new Exception("Ingresa el contrato");
+        }
+        if (contrato_ruta.trim().length()>255) {
+            throw new Exception("Demasiados caracteres para el contrato(max 255)");
+        }
+        if(cantidadAlumnos(curso_id)<15){
+            throw new Exception("El curso debe tener minimo 15 alumnos para registrar un contrato");
+        }
+        
+        //consultar si hay algun contrato registrado
+        String contrato_registrado = "";
+        Connection cnx = new Conexion().getConexion();
+        PreparedStatement stmt = cnx.prepareStatement("select contrato_ruta from curso where curso_id=?");
+        stmt.setString(1, curso_id);
+        ResultSet rs = stmt.executeQuery();
+        
+        while(rs.next()){
+            contrato_registrado = rs.getString("contrato_ruta");
+        }
+        cnx.close();
+        
+        if(contrato_registrado.length()>0)
+        {
+            throw new Exception("Ya se encuentra registrado un contrato");
+        }
+        
+        
+    }
+    public static int cantidadAlumnos(String curso_id) throws Exception{
+    
+        String sql = "select count(alumno_id) from alumno where curso_id=?";
+        
+        Connection cnx = new Conexion().getConexion();
+        int cantidadAlumnos = 0;
+        try {
+            PreparedStatement stmt = cnx.prepareStatement(sql);
+            stmt.setString(1, curso_id);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                cantidadAlumnos = rs.getInt(1);
+            }
+            
+            cnx.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(VOCurso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+        return cantidadAlumnos;
+    }
+    
 }

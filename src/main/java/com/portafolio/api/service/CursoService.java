@@ -163,7 +163,7 @@ public class CursoService {
     ) {
         Response res;
         try {
-            boolean registrado = VOCuenta.registrarContrato(curso_id, contrato_ruta);
+            boolean registrado = VOCurso.registrarContrato(curso_id, contrato_ruta);
             
             res = Response.ok().entity(registrado).build();
         }catch (NumberFormatException e) {

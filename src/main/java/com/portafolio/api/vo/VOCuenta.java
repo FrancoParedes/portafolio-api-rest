@@ -480,32 +480,6 @@ public class VOCuenta {
         return rol_id;
     }
     
-    public static boolean registrarContrato(String curso_id, String contrato_ruta) throws SQLException, Exception{ 
-        if (contrato_ruta.trim().length()==0) {
-            throw new Exception("Ingresa el contrato");
-        }
-        if (contrato_ruta.trim().length()>255) {
-            throw new Exception("Demasiados caracteres para el contrato(max 255)");
-        }
-        
-        String sql = "UPDATE curso SET contrato_ruta=? WHERE curso_id=?";
-
-        Connection cnx = new Conexion().getConexion();
-
-        PreparedStatement stmt = cnx.prepareStatement(sql);
-        stmt.setString(1, contrato_ruta);
-        stmt.setString(2, curso_id);
-
-        System.out.println("CONTRATO REGISTRADO");
-
-        int resultado = stmt.executeUpdate();
-        cnx.close();
-        System.out.println("Resultado de la actualizacion:" + resultado);
-        if (resultado == 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    
 
 }

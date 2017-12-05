@@ -5,6 +5,7 @@ com\portafolio\api\service\ActividadService.class
 com\portafolio\api\vo\VOCuenta.class
 com\portafolio\api\service\UsuarioService.class
 com\portafolio\api\service\ServicioService.class
+com\portafolio\api\vo\VOSeguro.class
 com\portafolio\api\utils\Email.class
 com\portafolio\api\vo\VOCursoServicio.class
 com\portafolio\api\service\AlumnoService.class
@@ -17,6 +18,7 @@ com\portafolio\api\vo\VOAlumno.class
 com\portafolio\api\vo\VORegion.class
 com\portafolio\api\vo\VOActividad.class
 com\portafolio\api\vo\VODepositoTipo.class
+com\portafolio\api\service\SeguroService.class
 com\portafolio\api\vo\VOServicio.class
 com\portafolio\api\vo\VOEscuela.class
 com\portafolio\api\service\EscuelaService.class

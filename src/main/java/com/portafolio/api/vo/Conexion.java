@@ -34,7 +34,7 @@ public class Conexion {
         Connection con = null;
         try {
             Class.forName(driver).newInstance();
-            DriverManager.setLoginTimeout(2);
+            DriverManager.setLoginTimeout(10);
             con = DriverManager.getConnection(ulrjdbc);
         } catch (SQLException e) {
             throw new Exception(e.toString());

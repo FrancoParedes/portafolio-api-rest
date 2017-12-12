@@ -3,6 +3,7 @@ package com.portafolio.api.vo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,9 +34,9 @@ public class Conexion {
         Connection con = null;
         try {
             Class.forName(driver).newInstance();
-            
+            DriverManager.setLoginTimeout(2);
             con = DriverManager.getConnection(ulrjdbc);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new Exception(e.toString());
         }
         System.out.println(con);

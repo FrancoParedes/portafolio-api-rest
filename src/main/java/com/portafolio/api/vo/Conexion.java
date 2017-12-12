@@ -29,14 +29,14 @@ public class Conexion {
     public Conexion() {
     }
 
-    public Connection getConexion() {
+    public Connection getConexion() throws Exception {
         Connection con = null;
         try {
             Class.forName(driver).newInstance();
             
             con = DriverManager.getConnection(ulrjdbc);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            throw new Exception(e.toString());
         }
         System.out.println(con);
         return con;

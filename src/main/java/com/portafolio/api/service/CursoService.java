@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.portafolio.api.vo.VOCuenta;
 import com.portafolio.api.vo.VOCurso;
+import com.portafolio.api.vo.VOCursoSeguro;
 import com.portafolio.api.vo.VODeposito;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -170,6 +171,45 @@ public class CursoService {
             Map msj = new HashMap();
             msj.put("message", "Ingresa correctamente el monto");
             res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+
+        return res;
+    }
+    @GET
+    @Path("{curso_id}/seguro")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getSeguroContratado(@PathParam("curso_id") String curso_id) {
+        Response res;
+        try {
+            res = Response.ok().entity(VOCursoSeguro.listarPorCurso(curso_id)).build();
+        } catch (Exception ex) {
+            Map msj = new HashMap();
+            msj.put("message", ex.getMessage());
+            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
+        }
+
+        return res;
+    }
+    @POST
+    @Path("{curso_id}/seguro")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response setSeguroContratado(
+            @PathParam("curso_id") String curso_id,
+            @DefaultValue("") @FormParam("seguro_id") String seguro_id,
+            @DefaultValue("") @FormParam("cantidad_personas") String cantidad_personas,
+            @DefaultValue("") @FormParam("fecha_inicio") String fecha_inicio,
+            @DefaultValue("") @FormParam("fecha_termino") String fecha_termino,
+            @DefaultValue("") @FormParam("precio") String precio) {
+        Response res;
+        try {
+            VOCursoSeguro seguro = new VOCursoSeguro(seguro_id, curso_id, cantidad_personas, fecha_inicio, fecha_termino, precio);
+            
+            res = Response.ok().entity(seguro).build();
         }catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());

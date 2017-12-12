@@ -15,6 +15,7 @@ com\portafolio\api\service\DestinoService.class
 com\portafolio\api\vo\VOCurso.class
 com\portafolio\api\vo\VODepositoCurso.class
 com\portafolio\api\vo\VOAlumno.class
+com\portafolio\api\vo\VOCursoSeguro.class
 com\portafolio\api\vo\VORegion.class
 com\portafolio\api\vo\VOActividad.class
 com\portafolio\api\vo\VODepositoTipo.class

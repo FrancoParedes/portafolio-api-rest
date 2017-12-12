@@ -141,7 +141,7 @@ public class VODeposito {
         return list;
     }
 
-    public static boolean aprobar(String deposito_id) throws SQLException{ 
+    public static boolean aprobar(String deposito_id) throws SQLException, Exception{ 
         
         String sql = "UPDATE deposito SET aprobado=1 WHERE deposito_id=?";
 
@@ -161,7 +161,7 @@ public class VODeposito {
             return false;
         }
     }
-    public static boolean rechazar(String deposito_id) throws SQLException{ 
+    public static boolean rechazar(String deposito_id) throws SQLException, Exception{ 
         
         String sql = "UPDATE deposito SET aprobado=2 WHERE deposito_id=?";
 

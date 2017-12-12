@@ -177,7 +177,7 @@ public class VOCursoSeguro {
         
         return resultado;
     }
-    public static List<Map> listar() throws SQLException{
+    public static List<Map> listar() throws SQLException, Exception{
         List<Map> list = new ArrayList<Map>();
         String sql = "SELECT * FROM curso_seguro";
         

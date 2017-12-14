@@ -72,7 +72,7 @@ public class VODepositoAlumno {
             Map map = new LinkedHashMap();
             map.put("deposito_id", rs.getString("deposito_id"));
             map.put("monto", rs.getInt("monto"));
-            map.put("estado", rs.getInt("estado"));
+            map.put("estado", rs.getString("estado"));
             map.put("fecha", rs.getString("fecha"));
 
             list.add(map);

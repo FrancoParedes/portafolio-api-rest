@@ -57,7 +57,7 @@ public class VODepositoAlumno {
 
 
 
-        sb.append("SELECT d.deposito_id, d.monto, d.fecha FROM deposito d ");
+        sb.append("SELECT d.deposito_id, d.monto, d.fecha, CASE WHEN d.aprobado=0 THEN 'Pendiente' WHEN d.aprobado=1  THEN 'Aprobado' WHEN d.aprobado=2  THEN 'No aprobado' END as \"ESTADO\" FROM deposito d ");
         sb.append("INNER JOIN deposito_alumno da ON d.deposito_id=da.deposito_id ");
         sb.append("WHERE da.alumno_id=? ");
         Connection cnx = new Conexion().getConexion();
@@ -72,6 +72,7 @@ public class VODepositoAlumno {
             Map map = new LinkedHashMap();
             map.put("deposito_id", rs.getString("deposito_id"));
             map.put("monto", rs.getInt("monto"));
+            map.put("estado", rs.getInt("estado"));
             map.put("fecha", rs.getString("fecha"));
 
             list.add(map);

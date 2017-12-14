@@ -37,7 +37,10 @@ public class VODestino {
 
     public void setNombre(String nombre) throws Exception {
         if (nombre.trim().length()==0) {
-            throw new Exception("Ingresa El nombre del destino");
+            throw new Exception("Ingresa el nombre del destino");
+        }
+        if(nombre.trim().length()>30){
+            throw new Exception("Demasiados caracteres para el destino");
         }
         this.nombre = nombre.toUpperCase();
     }
@@ -91,7 +94,7 @@ public class VODestino {
             }
             cnx.close();
             if(list.isEmpty()){
-                throw new Exception("No se encontraron actividades registradas");
+                throw new Exception("No se encontraron destinos registrados");
             }
         return list;
     }

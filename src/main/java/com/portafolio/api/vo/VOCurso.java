@@ -196,7 +196,7 @@ public class VOCurso {
             }
             cnx.close();
             if(list.isEmpty()){
-                throw new Exception("No se encontraron cuentas registradas");
+                throw new Exception("No se encontraron cursos registrados");
             }
         return list;
     }

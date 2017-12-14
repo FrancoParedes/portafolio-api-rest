@@ -5,6 +5,8 @@
  */
 package com.portafolio.api.vo;
 
+import java.sql.Connection;
+
 
 /**
  *
@@ -17,6 +19,12 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic 
+        try{
+            Connection cnx = new Conexion().getConexion();
+            System.out.println("MYSQL CONECTADO");
+        }catch(Exception ex){
+            System.out.println("ERROR AL CONECTAR CON MYSQL: " + ex.getMessage());
+        }
     }
     
 }

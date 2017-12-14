@@ -43,13 +43,13 @@ public class CursoService {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getCuentas() {
+    public Response getCuros() {
         Response res;
         try {
             res = Response.ok().entity(VOCurso.all()).build();
         } catch (Exception e) {
             Map msj = new HashMap();
-            msj.put("message", e.toString());
+            msj.put("message", e.getMessage());
             res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
         }
 

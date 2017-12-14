@@ -16,12 +16,12 @@ import java.sql.SQLException;
  * @author FRANCO
  */
 public class Conexion {
-    String usuario = "C##_equipo2";
-    String password = "portafolio02";
+    String usuario = "system";
+    String password = "oracle";
 
-    String host = "165.227.213.232"; // tambien puede ser una ip como "192.168.1.14"
+    String host = "104.236.124.24"; // tambien puede ser una ip como "192.168.1.14"
     String puerto = "1521";
-    String sid = "dbportafolio";
+    String sid = "XE";
 
     String driver = "oracle.jdbc.driver.OracleDriver";
 

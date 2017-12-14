@@ -159,7 +159,7 @@ public class VOEscuela {
         }
         cnx.close();
         if (list.isEmpty()) {
-            throw new Exception("No se encontraron cuentas registradas");
+            throw new Exception("No se encontraron escuelas registradas");
         }
         return list;
     }

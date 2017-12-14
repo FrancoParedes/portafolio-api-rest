@@ -4,6 +4,7 @@ package com.portafolio.api.vo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.TimeZone;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,6 +32,8 @@ public class Conexion {
     }
 
     public Connection getConexion() throws Exception {
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
+        TimeZone.setDefault(timeZone);
         Connection con = null;
         try {
             Class.forName(driver).newInstance();

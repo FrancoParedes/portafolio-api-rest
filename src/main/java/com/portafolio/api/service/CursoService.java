@@ -167,13 +167,10 @@ public class CursoService {
             boolean registrado = VOCurso.registrarContrato(curso_id, contrato_ruta);
             
             res = Response.ok().entity(registrado).build();
-        }catch (NumberFormatException e) {
-            Map msj = new HashMap();
-            msj.put("message", "Ingresa correctamente el monto");
-            res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
         }catch (Exception ex) {
             Map msj = new HashMap();
             msj.put("message", ex.getMessage());
+            System.out.println(ex.getStackTrace());
             res = Response.status(Response.Status.UNAUTHORIZED).entity(msj).build();
         }
 

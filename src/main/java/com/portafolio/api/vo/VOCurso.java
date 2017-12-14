@@ -333,7 +333,7 @@ public class VOCurso {
             return false;
         }
     }
-    private static void validarContrato(String curso_id, String contrato_ruta) throws Exception{
+    private static void validarContrato(String curso_id, String contrato_ruta) throws SQLException, Exception{
         if (contrato_ruta.trim().length()==0) {
             throw new Exception("Ingresa el contrato");
         }
@@ -345,7 +345,8 @@ public class VOCurso {
         }
         
         //consultar si hay algun contrato registrado
-        String contrato_registrado = "";
+        String contrato_registrado=null;
+        
         Connection cnx = new Conexion().getConexion();
         PreparedStatement stmt = cnx.prepareStatement("select contrato_ruta from curso where curso_id=?");
         stmt.setString(1, curso_id);
@@ -354,13 +355,11 @@ public class VOCurso {
         while(rs.next()){
             contrato_registrado = rs.getString("contrato_ruta");
         }
-        cnx.close();
         
-        if(contrato_registrado.length()>0)
+        if(contrato_registrado!=null)
         {
             throw new Exception("Ya se encuentra registrado un contrato");
         }
-        
         
     }
     public static int cantidadAlumnos(String curso_id) throws Exception{
@@ -381,7 +380,7 @@ public class VOCurso {
             cnx.close();
             
         } catch (SQLException ex) {
-            Logger.getLogger(VOCurso.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
         }
         
         
